@@ -15,6 +15,7 @@ include_directories("${PROJECT_SOURCE_DIR}/src")
 add_library(
     pratt STATIC
     ${PROJECT_SOURCE_DIR}/src/pratt.c
+    ${PROJECT_SOURCE_DIR}/src/log.h
 )
 
 add_executable(main ${PROJECT_SOURCE_DIR}/src/main.c)
