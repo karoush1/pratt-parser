@@ -4,6 +4,7 @@
 
 #include "tokens.h"
 #include "mem_arena.h"
+#include "utils.h"
 #include "log.h"
 
 int token_get_number_len(char *expr, int max_chars)

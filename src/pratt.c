@@ -6,7 +6,17 @@
 #include "pratt.h"
 #include "tokens.h"
 #include "mem_arena.h"
+#include "utils.h"
 #include "log.h"
+
+const char *pratt_err_status_str[] = {
+    FOREACH_TOKEN_TYPE(GENERATE_STRING)
+};
+
+const char* pratt_get_err_status_str(parser_err_t err)
+{
+    return pratt_err_status_str[err];
+}
 
 static parser_err_t tokenise_expression(char *expr, int expr_len, tokens_t *tokens)
 {
@@ -39,9 +49,19 @@ static parser_err_t tokenise_expression(char *expr, int expr_len, tokens_t *toke
             LOG_INFO("Final number is %s\n", s);
 
             i += tok_len;
-        // Ignore character
+        // Ignore character or invalid token
         } else {
-            LOG_INFO("Skip character. expr[%d] = %d(%c)\n", i, (int)expr[i], expr[i]);
+            if (isspace(expr[i])) {
+                LOG_INFO("Skip character. expr[%d] = %d(%c)\n", i, (int)expr[i], expr[i]);
+            } else if (isalpha(expr[i])) {
+                LOG_INFO("Received character. expr[%d] = %c\n", i, expr[i]);
+                return PARSE_VALUE_ERROR;
+            } else if (ispunct(expr[i])) {
+                return PARSE_OPERATOR_NOT_SUPPORTED;
+            } else {
+                LOG_ERROR("Should never reach here. Why? expr[%d] = %d(%c)\n", i, (int)expr[i], expr[i]);
+                return PARSE_ERROR_UNKNOWN;
+            }
         }
     }
 
@@ -59,6 +79,9 @@ void pratt_parser(char *equation, size_t n)
     printf("%s\n", equation);
     arena_t *arena = arena_init(DEFAULT_ARENA_SIZE);
     tokens_t *tokens = tokens_init(arena, MAX_TOKEN_QTY);
-    tokenise_expression(equation, n, tokens);
+    parser_err_t err = tokenise_expression(equation, n, tokens);
+    if (err) {
+        LOG_ERROR("Something went wrong. Parser returned err = %s\n", pratt_get_err_status_str(err));
+    }
     printf("Pratt parser end\n");
 }

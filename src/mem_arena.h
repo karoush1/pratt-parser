@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 
-#define DEFAULT_ARENA_SIZE 200 * 1024
+#define DEFAULT_ARENA_SIZE (200 * 1024)
 
 typedef struct {
     const void *buf;

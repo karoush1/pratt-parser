@@ -4,9 +4,7 @@
 #include <string.h>
 
 #include "mem_arena.h"
-
-#define GENERATE_ENUM(ENUM) ENUM,
-#define GENERATE_STRING(STRING) #STRING,
+#include "utils.h"
 
 #define FOREACH_TOKEN_TYPE(ITEM)  \
     ITEM(TOKEN_VALUE)       \

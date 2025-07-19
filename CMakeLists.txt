@@ -7,7 +7,7 @@ project(pratt-parser
     LANGUAGES C
 )
 
-set(CMAKE_C_FLAGS "-Wall -std=c11")
+set(CMAKE_C_FLAGS "-Wall -Werror -std=c11")
 set(CMAKE_C_FLAGS_DEBUG "-g")
 
 include_directories("${PROJECT_SOURCE_DIR}/src")
