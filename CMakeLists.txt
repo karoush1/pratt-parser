@@ -7,7 +7,7 @@ project(pratt-parser
     LANGUAGES C
 )
 
-set(CMAKE_C_FLAGS "-Wall -std=c99")
+set(CMAKE_C_FLAGS "-Wall -std=c11")
 set(CMAKE_C_FLAGS_DEBUG "-g")
 
 include_directories("${PROJECT_SOURCE_DIR}/src")
@@ -16,6 +16,7 @@ add_library(
     pratt STATIC
     ${PROJECT_SOURCE_DIR}/src/pratt.c
     ${PROJECT_SOURCE_DIR}/src/log.h
+    ${PROJECT_SOURCE_DIR}/src/mem_arena.h
 )
 
 add_executable(main ${PROJECT_SOURCE_DIR}/src/main.c)
