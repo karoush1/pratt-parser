@@ -4,54 +4,9 @@
 #include <ctype.h>
 
 #include "pratt.h"
+#include "tokens.h"
 #include "mem_arena.h"
 #include "log.h"
-
-#define MAX_TOKEN_QTY 100
-
-#define is_operation(c) \
-    (!!memchr(OP_TOKENS, (c), sizeof(OP_TOKENS)))
-
-static char OP_TOKENS[] = "+_*/";
-
-static int get_number_len(char *expr, int max_chars)
-{
-    int i = 0;
-    while (expr[i] != '\0' && isdigit(expr[i]) && i < max_chars) {
-        i++;
-    }
-    return i;
-}
-
-static const char *token_types[] = {
-    FOREACH_TOKEN_TYPE(GENERATE_STRING)
-};
-
-const char* token_get_type_str(token_type_t type)
-{
-    return token_types[type];
-}
-
-static void token_get_expr(token_t token, char *dst)
-{
-    for (int i = 0; i < token.len; i++) {
-        dst[i] = token.expr[i];
-    }
-}
-
-void token_print_pretty(token_t token)
-{
-    char expr[10] = { '\0' };
-    token_get_expr(token, expr);
-    LOG_INFO(
-        "{\n"
-        "    .expr = %s\n"
-        "    .len = %d\n"
-        "    .type = %s\n"
-        "}\n",
-        expr, token.len, token_get_type_str(token.type)
-    );
-}
 
 static parser_err_t tokenise_expression(char *expr, int expr_len, tokens_t *tokens)
 {
@@ -72,7 +27,7 @@ static parser_err_t tokenise_expression(char *expr, int expr_len, tokens_t *toke
         // Check if number token
         } else if (isdigit(expr[i])) {
             LOG_INFO("Found number '%c'...\n", expr[i]);
-            int tok_len = get_number_len(&expr[i], expr_len - i);
+            int tok_len = token_get_number_len(&expr[i], expr_len - i);
             tokens->token[tok_idx++] = (token_t){
                 .expr = &expr[i],
                 .len = tok_len,
@@ -96,35 +51,6 @@ static parser_err_t tokenise_expression(char *expr, int expr_len, tokens_t *toke
     }
 
     return PARSE_SUCCESS;
-}
-
-static token_t token_init_default(void)
-{
-    token_t token = {
-        .expr = NULL,
-        .len = 0,
-        .type = TOKEN_UNASSIGNED
-    };
-
-    return token;
-}
-
-token_t* token_init_array(arena_t *arena, int n_tokens){
-    token_t *token = arena_malloc(arena, sizeof(token_t) * n_tokens);
-    for (int i = 0; i < n_tokens; i++) {
-        token[i] = token_init_default();
-    }
-
-    return token;
-}
-
-static tokens_t* tokens_init(arena_t *arena, int n_tokens)
-{
-    tokens_t *tokens = arena_malloc(arena, sizeof(tokens_t));
-    tokens->n_tokens = n_tokens;
-    tokens->token = token_init_array(arena, n_tokens);
-
-    return tokens;
 }
 
 void pratt_parser(char *equation, size_t n)
