@@ -1,4 +1,5 @@
 #include "mem_arena.h"
+#include "log.h"
 
 void* arena_init(size_t size)
 {
@@ -15,6 +16,10 @@ void* arena_init(size_t size)
 
 void* arena_malloc(arena_t *arena, size_t size)
 {
+    if (size >= arena->len - arena->offset) {
+        LOG_ERROR("Not enough memory in the arena. Returning NULL\n");
+        return NULL;
+    }
     arena->offset += size;
     return (char*)(arena->buf) + arena->offset;
 }

@@ -18,7 +18,7 @@ typedef enum {
     FOREACH_PARSER_ERR_STATUS(GENERATE_ENUM)
 }parser_err_t;
 
-void pratt_parser(char *equation, size_t n);
+parser_err_t pratt_parser(char *equation, size_t n);
 const char* pratt_get_err_status_str(parser_err_t err);
 
 #endif // __PRATT_PARSER__

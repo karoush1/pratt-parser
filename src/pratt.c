@@ -73,12 +73,14 @@ static parser_err_t tokenise_expression(char *expr, int expr_len, tokens_t *toke
     return PARSE_SUCCESS;
 }
 
-void pratt_parser(char *equation, size_t n)
+parser_err_t pratt_parser(char *equation, size_t n)
 {
     printf("Pratt parser start\n");
     printf("%s\n", equation);
+
     arena_t *arena = arena_init(DEFAULT_ARENA_SIZE);
     tokens_t *tokens = tokens_init(arena, MAX_TOKEN_QTY);
+
     parser_err_t err = tokenise_expression(equation, n, tokens);
     if (err) {
         LOG_ERROR("Something went wrong. Parser returned err = %s\n", pratt_get_err_status_str(err));
