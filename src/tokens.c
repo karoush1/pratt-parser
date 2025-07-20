@@ -69,7 +69,7 @@ token_t* token_init_array(arena_t *arena, int n_tokens)
 
 tokens_t* tokens_init(arena_t *arena, int n_tokens)
 {
-    tokens_t *tokens = arena_malloc(arena, sizeof(tokens_t));
+    tokens_t *tokens = arena_malloc(arena, sizeof(tokens_t) * n_tokens);
     tokens->n_tokens = n_tokens;
     tokens->token = token_init_array(arena, n_tokens);
 

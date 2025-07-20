@@ -10,7 +10,7 @@
 #include "log.h"
 
 const char *pratt_err_status_str[] = {
-    FOREACH_TOKEN_TYPE(GENERATE_STRING)
+    FOREACH_PARSER_ERR_STATUS(GENERATE_STRING)
 };
 
 const char* pratt_get_err_status_str(parser_err_t err)
@@ -21,7 +21,7 @@ const char* pratt_get_err_status_str(parser_err_t err)
 static parser_err_t tokenise_expression(char *expr, int expr_len, tokens_t *tokens)
 {
     int tok_idx = 0;
-    for (int i = 0; i < expr_len; i++) {
+    for (int i = 0; i < expr_len - 1; i++) {
         if (tok_idx >= tokens->n_tokens) {
             return PARSE_TOKEN_INDEX_OUT_OF_BOUNDS;
         }
@@ -38,17 +38,17 @@ static parser_err_t tokenise_expression(char *expr, int expr_len, tokens_t *toke
         } else if (isdigit(expr[i])) {
             LOG_INFO("Found number '%c'...\n", expr[i]);
             int tok_len = token_get_number_len(&expr[i], expr_len - i);
-            tokens->token[tok_idx++] = (token_t){
+            tokens->token[tok_idx] = (token_t){
                 .expr = &expr[i],
                 .len = tok_len,
                 .type = TOKEN_VALUE
             };
 
             char s[10] = { '\0' };
-            token_get_expr(tokens->token[i], s);
+            token_get_expr(tokens->token[tok_idx++], s);
             LOG_INFO("Final number is %s\n", s);
 
-            i += tok_len;
+            i += tok_len - 1;
         // Ignore character or invalid token
         } else {
             if (isspace(expr[i])) {

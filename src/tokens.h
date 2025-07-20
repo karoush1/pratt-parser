@@ -27,9 +27,9 @@ typedef struct {
     int n_tokens;
 } tokens_t;
 
-#define MAX_TOKEN_QTY 100
+#define MAX_TOKEN_QTY 50
 
-#define OP_TOKENS "+_*/"
+#define OP_TOKENS "+-*/"
 
 #define is_operation(c) \
     (!!memchr(OP_TOKENS, (c), sizeof(OP_TOKENS)))
