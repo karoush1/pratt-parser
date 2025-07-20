@@ -7,28 +7,28 @@
 
 #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
-#define LOG_INFO(msg, ...) \
+#define LOG_INFO(...) \
 {\
     printf("I [%s@%s]: ", __FILENAME__, __func__);\
-    printf(msg, __VA_ARGS__);\
+    printf(__VA_ARGS__);\
 }
 
-#define LOG_DEBUG(msg, ...) \
+#define LOG_DEBUG(...) \
 {\
     printf("D [%s@%s]: ", __FILENAME__, __func__);\
-    printf(msg, __VA_ARGS__);\
+    printf(__VA_ARGS__);\
 }
 
-#define LOG_WARN(msg, ...) \
+#define LOG_WARN(...) \
 {\
     printf("W [%s@%s]: ", __FILENAME__, __func__);\
-    printf(msg, __VA_ARGS__);\
+    printf(__VA_ARGS__);\
 }
 
-#define LOG_ERROR(msg, ...) \
+#define LOG_ERROR(...) \
 {\
     printf("E [%s@%s]: ", __FILENAME__, __func__);\
-    printf(msg, __VA_ARGS__);\
+    printf(__VA_ARGS__);\
 }
 
 #endif // __LOG__
