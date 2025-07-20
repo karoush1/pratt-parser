@@ -18,6 +18,29 @@ const char* pratt_get_err_status_str(parser_err_t err)
     return pratt_err_status_str[err];
 }
 
+static parser_err_t extract_operands_and_values(
+        tokens_t *tokens,
+        tokens_t *operands,
+        tokens_t *values)
+{
+    int op_idx = 0, val_idx = 0;
+    for (int i = 0; i < tokens->n_tokens && tokens->token[i].type != TOKEN_UNASSIGNED; i++) {
+        if (tokens->token[i].type == TOKEN_OPERATOR) {
+            LOG_INFO("Found an operator\n");
+            token_print_pretty(tokens->token[i]);
+            operands->token[op_idx++] = tokens->token[i];
+        } else if (tokens->token[i].type == TOKEN_VALUE) {
+            LOG_INFO("Found a value\n");
+            token_print_pretty(tokens->token[i]);
+            values->token[val_idx++] = tokens->token[i];
+        } else {
+            LOG_ERROR("Something went wrong\n");
+        }
+    }
+
+    return PARSE_SUCCESS;
+}
+
 static parser_err_t tokenise_expression(char *expr, int expr_len, tokens_t *tokens)
 {
     int tok_idx = 0;
@@ -83,7 +106,20 @@ parser_err_t pratt_parser(char *equation, size_t n)
 
     parser_err_t err = tokenise_expression(equation, n, tokens);
     if (err) {
-        LOG_ERROR("Something went wrong. Parser returned err = %s\n", pratt_get_err_status_str(err));
+        LOG_ERROR("Something went wrong. Tokenization returned err = %s\n", pratt_get_err_status_str(err));
+        return err;
     }
+
+    tokens_t *operands = tokens_init(arena, MAX_TOKEN_QTY);
+    tokens_t *values = tokens_init(arena, MAX_TOKEN_QTY);
+    err = extract_operands_and_values(tokens, operands, values);
+    if (err) {
+        LOG_ERROR("Something went wrong. Op and value extraction returned err = %s\n", pratt_get_err_status_str(err));
+        return err;
+    }
+
+    arena_free(arena);
+
     printf("Pratt parser end\n");
+    return PARSE_SUCCESS;
 }
