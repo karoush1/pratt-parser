@@ -12,21 +12,15 @@ set(CMAKE_C_FLAGS_DEBUG "-g")
 
 include_directories("${PROJECT_SOURCE_DIR}/src")
 
-add_library(tokens STATIC
-    ${PROJECT_SOURCE_DIR}/src/tokens.c
-    ${PROJECT_SOURCE_DIR}/src/mem_arena.c
-)
-
 add_library(pratt STATIC
     ${PROJECT_SOURCE_DIR}/src/pratt.c
-    ${PROJECT_SOURCE_DIR}/src/tokens.h
+    ${PROJECT_SOURCE_DIR}/src/tokens.c
     ${PROJECT_SOURCE_DIR}/src/mem_arena.c
+    ${PROJECT_SOURCE_DIR}/src/parser.c
 )
 
 add_executable(main
     ${PROJECT_SOURCE_DIR}/src/main.c
     ${PROJECT_SOURCE_DIR}/src/pratt.c
-    ${PROJECT_SOURCE_DIR}/src/tokens.c
-    ${PROJECT_SOURCE_DIR}/src/log.h
 )
-target_link_libraries(main pratt tokens)
+target_link_libraries(main pratt)

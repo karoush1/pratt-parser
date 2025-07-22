@@ -3,6 +3,7 @@
 
 #include <string.h>
 
+#include "parser.h"
 #include "mem_arena.h"
 #include "utils.h"
 

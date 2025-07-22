@@ -4,19 +4,11 @@
 #include <ctype.h>
 
 #include "pratt.h"
+#include "parser.h"
 #include "tokens.h"
 #include "mem_arena.h"
 #include "utils.h"
 #include "log.h"
-
-const char *pratt_err_status_str[] = {
-    FOREACH_PARSER_ERR_STATUS(GENERATE_STRING)
-};
-
-const char* pratt_get_err_status_str(parser_err_t err)
-{
-    return pratt_err_status_str[err];
-}
 
 static parser_err_t extract_operands_and_values(
         tokens_t *tokens,
@@ -106,7 +98,7 @@ parser_err_t pratt_parser(char *equation, size_t n)
 
     parser_err_t err = tokenise_expression(equation, n, tokens);
     if (err) {
-        LOG_ERROR("Something went wrong. Tokenization returned err = %s\n", pratt_get_err_status_str(err));
+        LOG_ERROR("Something went wrong. Tokenization returned err = %s\n", parser_get_err_status_str(err));
         return err;
     }
 
@@ -114,7 +106,7 @@ parser_err_t pratt_parser(char *equation, size_t n)
     tokens_t *values = tokens_init(arena, MAX_TOKEN_QTY);
     err = extract_operands_and_values(tokens, operands, values);
     if (err) {
-        LOG_ERROR("Something went wrong. Op and value extraction returned err = %s\n", pratt_get_err_status_str(err));
+        LOG_ERROR("Something went wrong. Op and value extraction returned err = %s\n", parser_get_err_status_str(err));
         return err;
     }
 

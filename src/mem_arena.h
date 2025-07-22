@@ -1,7 +1,7 @@
 #ifndef __MEM_ARENA__
 #define __MEM_ARENA__
 
-#include <stdlib.h>
+#include <stddef.h>
 
 #define DEFAULT_ARENA_SIZE (200 * 1024)
 

@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "mem_arena.h"
 #include "log.h"
 
