@@ -36,9 +36,10 @@ typedef struct {
     (!!memchr(OP_TOKENS, (c), sizeof(OP_TOKENS)))
 
 const char* token_get_type_str(token_type_t type);
-int token_get_number_len(char *expr, int max_chars);
+int token_get_number_len_from_expr(char *expr, int max_chars);
 void token_get_expr(token_t token, char *dst);
 void token_print_pretty(token_t token);
+parser_err_t token_get_value(token_t token, double *parsed_value);
 token_t token_init_default(void);
 token_t* token_init_array(arena_t *arena, int n_tokens);
 tokens_t* tokens_init(arena_t *arena, int n_tokens);

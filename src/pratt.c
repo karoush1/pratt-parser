@@ -52,7 +52,11 @@ static parser_err_t tokenise_expression(char *expr, int expr_len, tokens_t *toke
         // Check if number token
         } else if (isdigit(expr[i])) {
             LOG_INFO("Found number '%c'...\n", expr[i]);
-            int tok_len = token_get_number_len(&expr[i], expr_len - i);
+            int tok_len = token_get_number_len_from_expr(&expr[i], expr_len - i);
+            if (!tok_len) {
+                LOG_INFO("Found NaN\n");
+                return PARSE_NAN;
+            }
             tokens->token[tok_idx] = (token_t){
                 .expr = &expr[i],
                 .len = tok_len,
@@ -70,7 +74,7 @@ static parser_err_t tokenise_expression(char *expr, int expr_len, tokens_t *toke
                 LOG_INFO("Skip character. expr[%d] = %d(%c)\n", i, (int)expr[i], expr[i]);
             } else if (isalpha(expr[i])) {
                 LOG_INFO("Received character. expr[%d] = %c\n", i, expr[i]);
-                return PARSE_VALUE_ERROR;
+                return PARSE_NAN;
             } else if (ispunct(expr[i])) {
                 return PARSE_OPERATOR_NOT_SUPPORTED;
             } else {

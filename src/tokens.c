@@ -5,14 +5,28 @@
 #include "tokens.h"
 #include "mem_arena.h"
 #include "utils.h"
+#include "parser.h"
 #include "log.h"
 
-int token_get_number_len(char *expr, int max_chars)
+#define is_period(c) ((c) == '.')
+
+int token_get_number_len_from_expr(char *expr, int max_chars)
 {
-    int i = 0;
-    while (expr[i] != '\0' && isdigit(expr[i]) && i < max_chars) {
+    int i = 0, period_cnt = 0;
+    while (expr[i] != '\0'
+            && (isdigit(expr[i]) || is_period(expr[i]))
+            && i < max_chars) {
+        if (is_period(expr[i])) {
+            period_cnt++;
+        }
+
+        if (period_cnt > 1) {
+            return 0;
+        }
+
         i++;
     }
+
     return i;
 }
 
@@ -30,6 +44,20 @@ void token_get_expr(token_t token, char *dst)
     for (int i = 0; i < token.len; i++) {
         dst[i] = token.expr[i];
     }
+}
+
+parser_err_t token_get_value(token_t token, double *parsed_value)
+{
+    if (token.type != TOKEN_VALUE) {
+        LOG_ERROR("Error trying to convert non-value token to value\n");
+        token_print_pretty(token);
+
+        return PARSE_VALUE_FROM_NON_VALUE_TYPE;
+    }
+
+    *parsed_value = strtod(token.expr, NULL);
+
+    return PARSE_SUCCESS;
 }
 
 void token_print_pretty(token_t token)
